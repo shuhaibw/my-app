@@ -1,6 +1,10 @@
 import Image from "next/image";
+import supabase from "./lib/supabaseClient";
 
-export default function Home() {
+export default async function Home() {
+  // get all user data from supabase
+  let { data: users, error } = await supabase.from("data").select("*")
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -12,6 +16,14 @@ export default function Home() {
           height={38}
           priority
         />
+
+        {/*display users */}
+        <h2 className = "font-semibold text-2xl text-center">All Users from Supabase:</h2>
+        {error && <p style = {{ color: "red"}}> Error: {error.message} </p> }
+        <p>
+          {users ? users.map((user) => users.name + ": " + users.email).join(", ") : "No users"}
+        </p>
+
         <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
